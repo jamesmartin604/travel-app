@@ -1,9 +1,8 @@
 import React from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 import Home from './pages/Home';
-import Therapists from './pages/Therapists';
-import Clients from './pages/Clients';
-import Sessions from './pages/Sessions';
+import TravelLogs from './pages/TravelLogs';
+import JourneyPlans from './pages/JourneyPlans';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ProtectedRoute from './ProtectedRoute';
@@ -24,8 +23,8 @@ function App() {
         </div>
         {user && (
           <div className="nav-right">
-            <NavLink to="/therapists" className="nav-link" activeClassName="active">Travel Logs</NavLink>
-            <NavLink to="/clients" className="nav-link" activeClassName="active">Journey Plans</NavLink>
+            <NavLink to="/travellogs" className="nav-link" activeClassName="active">Travel Logs</NavLink>
+            <NavLink to="/journeyplans" className="nav-link" activeClassName="active">Journey Plans</NavLink>
           </div>
         )}
       </nav>
@@ -35,8 +34,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         
         <Route element={<ProtectedRoute />}>
-          <Route path="/therapists" element={<Therapists />} />
-          <Route path="/clients" element={<Clients />} />
+          <Route path="/travellogs" element={<TravelLogs />} />
+          <Route path="/journeyplans" element={<JourneyPlans />} />
         </Route>
       </Routes>
     </>

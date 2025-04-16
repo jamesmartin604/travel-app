@@ -3,9 +3,8 @@ const cors = require('cors');
 const pool = require('./db'); // postgresql connection pool
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const clientRoutes = require('./routes/clientRoutes');
-const sessionRoutes = require('./routes/sessionRoutes');
-const therapistRoutes = require('./routes/therapistRoutes');
+const travelLogRoutes = require('./routes/travelLogRoutes');
+const journeyPlanRoutes = require('./routes/journeyPlanRoutes');
 
 const app = express();
 const PORT = 5000;
@@ -15,9 +14,8 @@ app.use(cors());
 app.use(express.json()); // parse json request bodies
 
 //routes
-app.use('/api/therapists',therapistRoutes);
-app.use('/api/sessions',sessionRoutes);
-app.use('/api/clients',clientRoutes);
+app.use('/api/travelLogs',travelLogRoutes);
+app.use('/api/journeyPlans',journeyPlanRoutes);
 
 app.post('/api/register', async (req, res) => {
   try {
