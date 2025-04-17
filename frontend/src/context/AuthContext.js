@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem('user', JSON.stringify({ username: data.username }));
       setUser({ username: data.username });
       
-      return { success: true };
+      return { success: true, data };
     } catch (error) {
       return { success: false, message: error.message };
     }

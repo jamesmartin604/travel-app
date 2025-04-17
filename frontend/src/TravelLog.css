@@ -1,0 +1,164 @@
+/* Travel Logs Styles */
+.travel-logs-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.travellog-desc {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+.travel-log-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.travel-log-form input,
+.travel-log-form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.travel-log-form textarea {
+    grid-column: 1 / -1;
+    min-height: 100px;
+}
+
+.date-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendar-icon {
+    color: #7f8c8d;
+}
+
+.travel-log-form button {
+    grid-column: 1 / -1;
+    padding: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.travel-log-form button:hover {
+    background-color: #2980b9;
+}
+
+.travel-logs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.travel-log-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+.card-header {
+    margin-bottom: 15px;
+}
+
+.card-header h2 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+}
+
+.date-range {
+    color: #7f8c8d;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.post-date {
+    color: #7f8c8d;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.card-body {
+    margin-bottom: 15px;
+    color: #34495e;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tag {
+    background-color: #e0f7fa;
+    color: #00838f;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.update-button, .delete-button {
+    padding: 5px 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.update-button {
+    background-color: #f39c12;
+    color: white;
+}
+
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.update-button:hover {
+    background-color: #d35400;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+}
+
+.travel-log-form textarea {
+    grid-column: 1 / -1;
+    min-height: 40px;  /* Reduced from 100px */
+    max-height: 60px;  /* Optional: Add max height */
+    resize: vertical;  /* Allows user to resize if needed */
+}
