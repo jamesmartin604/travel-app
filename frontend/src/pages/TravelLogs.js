@@ -18,46 +18,100 @@ const TravelLogs = () => {
         return dateString.split('T')[0];
     };
 
-    // Fetch all travel logs
+    // In TravelLogs.js, modify the fetchTravelLogs function:
     const fetchTravelLogs = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/travelLogs');
-            setTravelLog(response.data);
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/api/travelLogs', {
+            headers: {
+            Authorization: `Bearer ${token}`
+            }
+        });
+        setTravelLog(response.data);
         } catch (error) {
-            console.error('Error fetching TravelLogs', error);
+        console.error('Error fetching TravelLogs', error);
         }
     };
 
-    // Add a new travel log
+    // Similarly modify add, update, and delete functions to include the token
     const addTravelLog = async () => {
+        const token = localStorage.getItem('token');
         await axios.post('http://localhost:5000/api/travelLogs', {
-            title,
-            description,
-            start_date,
-            end_date,
-            post_date,
-            tags,
+        title,
+        description,
+        start_date,
+        end_date,
+        post_date,
+        tags,
+        }, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
         });
         fetchTravelLogs();
     };
 
     // Update a travel log
     const updateTravelLog = async (id) => {
-        await axios.put(`http://localhost:5000/api/travelLogs/${id}`, {
-            title,
-            description,
-            start_date,
-            end_date,
-            post_date,
-            tags,
-        });
-        fetchTravelLogs();
-    };
+        try {
+          const token = localStorage.getItem('token');
+          
+          const response = await axios.put(
+            `http://localhost:5000/api/travelLogs/${id}`,
+            {
+              title,
+              description,
+              start_date,
+              end_date,
+              post_date,
+              tags,
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          );
+      
+          fetchTravelLogs(); // Refresh the list after successful update
+          return response.data;
+        } catch (error) {
+          console.error('Error updating travel log:', error);
+          
+          // Handle specific error cases
+          if (error.response) {
+            if (error.response.status === 401) {
+              alert('Session expired. Please log in again.');
+              // Optionally redirect to login
+              // window.location.href = '/login';
+            } else if (error.response.status === 403) {
+              alert('You do not have permission to update this travel log.');
+            } else if (error.response.status === 404) {
+              alert('Travel log not found.');
+            } else {
+              alert('An error occurred while updating the travel log.');
+            }
+          } else {
+            alert('Network error. Please check your connection.');
+          }
+          
+          throw error; // Re-throw the error if you want to handle it in the calling component
+        }
+      };
 
     // Delete a travel log
-    const deleteTravelLog = async (id) => {
-        await axios.delete(`http://localhost:5000/api/travelLogs/${id}`);
-        fetchTravelLogs();
+    const deleteTravelLog = async(id) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`http://localhost:5000/api/travelLogs/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            fetchTravelLogs();
+        } catch (error) {
+            console.error('Error deleting travel plan:', error);
+        }
     };
 
     useEffect(() => {

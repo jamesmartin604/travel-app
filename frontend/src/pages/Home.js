@@ -11,9 +11,9 @@ function Home() {
       <p className='page-description'>Track your travel memories and plan your next adventures with TravelLogger. Log your past journeys or create plans for future explorations.</p>
       <br></br>
       {user ? (
-        <div>
+        <div className='logout-container'>
           <p className='welcome-back'>Welcome back, {user.username}!</p>
-          <button onClick={logout}>Logout</button>
+          <button onClick={logout} className='logout-button'>Logout</button>
         </div>
       ) : (
         <div className='auth-links'>

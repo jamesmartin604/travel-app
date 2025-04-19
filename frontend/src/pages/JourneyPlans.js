@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../JourneyPlans.css'; // Assuming you have a CSS file for styling
-import { FaCheck, FaRegCheckCircle, FaRegCircle } from 'react-icons/fa';
+import { FaRegCheckCircle, FaRegCircle } from 'react-icons/fa';
 
 const JourneyPlans = () => {
     const[journey_plans,setJourneyPlans]=useState([]);
@@ -9,7 +9,7 @@ const JourneyPlans = () => {
     const[journey_plan_locations,setJourneyPlanLocation]=useState('');
     const[start_date,setStartDate]=useState('');
     const[end_date,setEndDate]=useState('');
-    const[list_of_activites,setListOfActivities]=useState('');
+    const[list_of_activities,setListOfActivities]=useState('');
     const[description,setDescription]=useState('');
 
     const formatDate=(dateString)=>{
@@ -20,46 +20,106 @@ const JourneyPlans = () => {
     //fetch all journey plans
     const fetchJourneyPlans = async() => {
         try {
-            const response = await axios.get('http://localhost:5000/api/journeyPlans');
-            console.log('Response:',response.data); //log the response for debugging
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:5000/api/journeyPlans', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             setJourneyPlans(response.data);
         } catch (error) {
-            console.error('erorr fetching journey plans:',error.response || error);
+            console.error('Error fetching journey plans:', error.response || error);
         }
-
     };
 
-    //add a new journey plan
+    // In your JourneyPlans.js component
     const addJourneyPlan = async () => {
+        try {
+        const token = localStorage.getItem('token'); // Get stored token
         await axios.post('http://localhost:5000/api/journeyPlans', {
             journey_plan_name,
             journey_plan_locations,
             start_date,
             end_date,
-            list_of_activites,
+            list_of_activities: list_of_activities 
+                ? list_of_activities.split(',').map(item => item.trim()).filter(Boolean)
+                    : [], 
             description,
+        }, {
+            headers: {
+            'Authorization': `Bearer ${token}` // Add this header
+            }
         });
-        fetchJourneyPlans(); //refresh the list
+        fetchJourneyPlans();
+        } catch (error) {
+        console.error('Error adding journey plan:', error);
+        }
     };
 
     //Update a journey plan
     const updateJourneyPlan = async (id) => {
-        await axios.put(`http://localhost:5000/api/journeyPlans/${id}`, {
-            journey_plan_name,
-            journey_plan_locations,
-            start_date,
-            end_date,
-            list_of_activites,
-            description,
-        });
-        fetchJourneyPlans(); //refresh the list
-    };
+        try {
+          const token = localStorage.getItem('token');
+          
+          const response = await axios.put(
+            `http://localhost:5000/api/journeyPlans/${id}`,
+            {
+                journey_plan_name,
+                journey_plan_locations,
+                start_date,
+                end_date,
+                list_of_activities: list_of_activities
+                ? list_of_activities.split(',').map(item => item.trim()).filter(Boolean)
+                : [],
+                description,
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          );
+      
+          fetchJourneyPlans(); // Refresh the list after successful update
+          return response.data;
+        } catch (error) {
+          console.error('Error updating journey plan:', error);
+          
+          // Handle specific error cases
+          if (error.response) {
+            if (error.response.status === 401) {
+              alert('Session expired. Please log in again.');
+              // Optionally redirect to login
+              // window.location.href = '/login';
+            } else if (error.response.status === 403) {
+              alert('You do not have permission to update this journey plan.');
+            } else if (error.response.status === 404) {
+              alert('journey plan not found.');
+            } else {
+              alert('An error occurred while updating the journey plan.');
+            }
+          } else {
+            alert('Network error. Please check your connection.');
+          }
+          
+          throw error; // Re-throw the error if you want to handle it in the calling component
+        }
+      };
     
 
     //delete a journey plan
-    const deleteJourneyPlan = async(id)=>{
-        await axios.delete(`http://localhost:5000/api/journeyPlans/${id}`);
-        fetchJourneyPlans(); //refresh the list
+    const deleteJourneyPlan = async(id) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`http://localhost:5000/api/journeyPlans/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            fetchJourneyPlans();
+        } catch (error) {
+            console.error('Error deleting journey plan:', error);
+        }
     };
 
     const calculateDaysLeft = (endDate) => {
@@ -109,8 +169,8 @@ const JourneyPlans = () => {
                 />
                 <input
                     type="text"
-                    placeholder="List Of Activities"
-                    value={list_of_activites}
+                    placeholder="List Of Activities (Comma separated)"
+                    value={list_of_activities}
                     onChange={(e) => setListOfActivities(e.target.value)}
                 />
                 <textarea
@@ -141,9 +201,27 @@ const JourneyPlans = () => {
                         </div>
                         
                         <div className="card-body">
-                            <p>{journey_plan.description}</p>
-                        </div>
+                        <p>{journey_plan.description}</p>
+                        {journey_plan.list_of_activities && (
+                            <div className="activities-section">
+                            <h4>List of Activities:</h4>
+                            <ul className='activities-list'>
+                                {(Array.isArray(journey_plan.list_of_activities) 
+                                ? journey_plan.list_of_activities.map((activity, index) => (
+                                    <li key={index}>{activity}</li>
+                                ))
+                                : journey_plan.list_of_activities.split(',').map((activity, 
+                                    index) => (
+                                        <li key={index}>{activity.trim()}</li>
+                                    )
+                                ))
+                            }
+                                    
+                            </ul>
                         
+                            </div>
+                        )}               
+                        </div>
                         <div className="card-footer">
                             <div className="days-left">
                                 {calculateDaysLeft(journey_plan.end_date) > 0 ? (

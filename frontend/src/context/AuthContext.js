@@ -16,6 +16,7 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
+  // In your AuthContext.js
   const login = async (username, password) => {
     try {
       const response = await fetch('http://localhost:5000/api/login', {
@@ -28,13 +29,17 @@ export function AuthProvider({ children }) {
       
       const data = await response.json();
       
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
+      if (!response.ok) throw new Error(data.message || 'Login failed');
       
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify({ username: data.username }));
-      setUser({ username: data.username });
+      localStorage.setItem('token', data.token); // Ensure this line exists
+      localStorage.setItem('user', JSON.stringify({
+         username: data.username,
+        userId: data.userId, 
+      }));
+      setUser({ 
+        username: data.username,
+        userId: data.userId,
+      });
       
       return { success: true, data };
     } catch (error) {
