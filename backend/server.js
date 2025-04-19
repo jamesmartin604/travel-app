@@ -14,8 +14,8 @@ app.use(cors());
 app.use(express.json()); // parse json request bodies
 
 //routes
-app.use('/api/travelLogs',travelLogRoutes);
-app.use('/api/journeyPlans',journeyPlanRoutes);
+app.use('/api/travelLogs', travelLogRoutes);
+app.use('/api/journeyPlans', journeyPlanRoutes);
 
 app.post('/api/register', async (req, res) => {
   try {
@@ -78,7 +78,7 @@ app.post('/api/login', async (req, res) => {
       { expiresIn: '1h' }
     );
     
-    res.json({ token, username: user.username });
+    res.json({ token, username: user.username, userId: user.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
